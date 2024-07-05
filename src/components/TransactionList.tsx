@@ -23,7 +23,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -37,13 +36,7 @@ import {
   TableCell,
 } from "./ui/table";
 import { Button } from "./ui/button";
-import {
-  FilePenIcon,
-  Trash2,
-  ArrowUpDown,
-  ChevronDown,
-  MoreHorizontal,
-} from "lucide-react";
+import { Trash2, ArrowUpDown, ChevronDown } from "lucide-react";
 import { Input } from "./ui/input";
 import { columns } from "../services/columns";
 import TransactionForm from "./TransactionForm";
@@ -93,21 +86,23 @@ const TransactionList: React.FC<TransactionListProps> = ({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-        <CardTitle>Transações</CardTitle>
-        <CardDescription>
-          Gerencie suas transações, adicionando, editando e excluindo conforme
-          necessário.
-        </CardDescription>
+          <CardTitle>Transações</CardTitle>
+          <CardDescription>
+            Gerencie suas transações, adicionando, editando e excluindo conforme
+            necessário.
+          </CardDescription>
         </div>
         <div>
-        <TransactionForm onAddTransaction={handleAddTransaction} />
+          <TransactionForm onAddTransaction={handleAddTransaction} />
         </div>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex items-center py-4">
           <Input
             placeholder="Filtrar transações..."
-            value={(table.getColumn("description")?.getFilterValue() as string) ?? ""}
+            value={
+              (table.getColumn("description")?.getFilterValue() as string) ?? ""
+            }
             onChange={(event) =>
               table.getColumn("description")?.setFilterValue(event.target.value)
             }
@@ -156,11 +151,12 @@ const TransactionList: React.FC<TransactionListProps> = ({
                               header.column.columnDef.header,
                               header.getContext()
                             )}
-                            {
-                              { asc: <ArrowUpDown className="ml-2 h-4 w-4" />, desc: <ArrowUpDown className="ml-2 h-4 w-4 rotate-180" />, }[
-                                header.column.getIsSorted() as string
-                              ] ?? null
-                            }
+                            {{
+                              asc: <ArrowUpDown className="ml-2 h-4 w-4" />,
+                              desc: (
+                                <ArrowUpDown className="ml-2 h-4 w-4 rotate-180" />
+                              ),
+                            }[header.column.getIsSorted() as string] ?? null}
                           </div>
                         )}
                       </TableHead>
@@ -185,7 +181,10 @@ const TransactionList: React.FC<TransactionListProps> = ({
                       </TableCell>
                     ))}
                     <TableCell className="flex gap-4">
-                      <Editar {...row.original} onEditTransaction={onEditTransaction} />
+                      <Editar
+                        {...row.original}
+                        onEditTransaction={onEditTransaction}
+                      />
                       <Button
                         variant="ghost"
                         className="w-4 h-4 p-0"
@@ -198,7 +197,10 @@ const TransactionList: React.FC<TransactionListProps> = ({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
                     Nenhuma transação encontrada.
                   </TableCell>
                 </TableRow>

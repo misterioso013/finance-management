@@ -24,9 +24,34 @@ import {
   TableBody,
   TableCell,
 } from "../components/ui/table";
-import { ResponsiveBar } from "@nivo/bar";
-import { ResponsiveLine } from "@nivo/line";
+import { ResponsiveBar, BarDatum } from "@nivo/bar";
 import { ResponsivePie } from "@nivo/pie";
+
+// Define uma interface que estende BarDatum
+interface BarChartData extends BarDatum {
+  name: string;
+  income: number;
+  expenses: number;
+}
+
+// Define uma interface para as propriedades do StackedbarChart
+interface StackedbarChartProps {
+  data: BarChartData[];
+  className?: string;
+}
+
+// Define a interface para os dados do gráfico de pizza
+interface PieChartData {
+  id: string;
+  label: string;
+  value: number;
+}
+
+// Define uma interface para as propriedades do PieChart
+interface PieChartProps {
+  data: PieChartData[];
+  className?: string;
+}
 
 const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -54,7 +79,9 @@ const Dashboard: React.FC = () => {
 
   const handleEditTransaction = (updatedTransaction: Transaction) => {
     const updatedTransactions = transactions.map((transaction) =>
-      transaction.id === updatedTransaction.id ? updatedTransaction : transaction
+      transaction.id === updatedTransaction.id
+        ? updatedTransaction
+        : transaction
     );
     setTransactions(updatedTransactions);
     localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
@@ -72,13 +99,23 @@ const Dashboard: React.FC = () => {
     return { income, expenses, balance };
   }, [transactions]);
 
+  // Tipagem para o objeto de agrupamento
+  interface GroupedTransactions {
+    [key: string]: number;
+    income: number;
+    expense: number;
+  }
+
   // Dados para gráficos
-  const barChartData = useMemo(() => {
-    const groupedByType = transactions.reduce((acc, transaction) => {
-      if (!acc[transaction.type]) acc[transaction.type] = 0;
-      acc[transaction.type] += transaction.amount;
-      return acc;
-    }, {});
+  const barChartData: BarChartData[] = useMemo(() => {
+    const groupedByType: GroupedTransactions = transactions.reduce(
+      (acc: GroupedTransactions, transaction) => {
+        if (!acc[transaction.type]) acc[transaction.type] = 0;
+        acc[transaction.type] += transaction.amount;
+        return acc;
+      },
+      { income: 0, expense: 0 }
+    );
 
     return Object.keys(groupedByType).map((type) => ({
       name: type,
@@ -87,13 +124,13 @@ const Dashboard: React.FC = () => {
     }));
   }, [transactions]);
 
-  const pieChartData = useMemo(() => {
+  const pieChartData: PieChartData[] = useMemo(() => {
     const total = income + expenses;
 
     return [
       { id: "Income", label: "Income", value: income },
-      { id: "Expenses", label: "Expenses", value: expenses }
-    ].map(d => ({ ...d, value: (d.value / total) * 100 }));
+      { id: "Expenses", label: "Expenses", value: expenses },
+    ].map((d) => ({ ...d, value: (d.value / total) * 100 }));
   }, [income, expenses]);
 
   return (
@@ -104,7 +141,9 @@ const Dashboard: React.FC = () => {
             <ArrowLeft className="h-4 w-4" />
             <span className="sr-only">Voltar</span>
           </Button> */}
-          <h1 className="font-semibold text-lg md:text-xl">Finance Management</h1>
+          <h1 className="font-semibold text-lg md:text-xl">
+            Finance Management
+          </h1>
           <div className="ml-auto flex items-center gap-2">
             <Popover>
               <PopoverTrigger asChild>
@@ -143,7 +182,9 @@ const Dashboard: React.FC = () => {
                 <PieChart className="aspect-[4/3]" data={pieChartData} />
               </CardContent>
             </Card>
-            <h3>--- Implementar um Chatbot AI para falar sobre os gastos ---</h3>
+            <h3>
+              --- Implementar um Chatbot AI para falar sobre os gastos ---
+            </h3>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
@@ -161,12 +202,16 @@ const Dashboard: React.FC = () => {
                   </TableHeader>
                   <TableBody>
                     {transactions
-                      .filter(transaction => transaction.type === "expense")
-                      .map(transaction => (
+                      .filter((transaction) => transaction.type === "expense")
+                      .map((transaction) => (
                         <TableRow key={transaction.id}>
-                          <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                          <TableCell>
+                            {new Date(transaction.date).toLocaleDateString()}
+                          </TableCell>
                           <TableCell>{transaction.description}</TableCell>
-                          <TableCell>R$ {transaction.amount.toFixed(2)}</TableCell>
+                          <TableCell>
+                            R$ {transaction.amount.toFixed(2)}
+                          </TableCell>
                         </TableRow>
                       ))}
                   </TableBody>
@@ -181,23 +226,34 @@ const Dashboard: React.FC = () => {
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <span>Entradas</span>
-                    <span className="font-semibold">R$ {income.toFixed(2)}</span>
+                    <span className="font-semibold">
+                      R$ {income.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Saídas</span>
-                    <span className="font-semibold">R$ {expenses.toFixed(2)}</span>
+                    <span className="font-semibold">
+                      R$ {expenses.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Saldo</span>
-                    <span className="font-semibold">R$ {balance.toFixed(2)}</span>
+                    <span className="font-semibold">
+                      R$ {balance.toFixed(2)}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Próximos Gastos</span>
-                    <span className="font-semibold">R$ {
-                      transactions
-                        .filter(transaction => transaction.type === "expense")
-                        .reduce((sum, transaction) => sum + transaction.amount, 0).toFixed(2)
-                    }</span>
+                    <span className="font-semibold">
+                      R${" "}
+                      {transactions
+                        .filter((transaction) => transaction.type === "expense")
+                        .reduce(
+                          (sum, transaction) => sum + transaction.amount,
+                          0
+                        )
+                        .toFixed(2)}
+                    </span>
                   </div>
                 </div>
               </CardContent>
@@ -217,9 +273,9 @@ const Dashboard: React.FC = () => {
 
 export default Dashboard;
 
-function PieChart({ data, ...props }) {
+function PieChart({ data, className }: PieChartProps) {
   return (
-    <div {...props}>
+    <div className={className}>
       <ResponsivePie
         data={data}
         sortByValue
@@ -256,9 +312,9 @@ function PieChart({ data, ...props }) {
   );
 }
 
-function StackedbarChart({ data, ...props }) {
+function StackedbarChart({ data, className }: StackedbarChartProps) {
   return (
-    <div {...props}>
+    <div className={className}>
       <ResponsiveBar
         data={data}
         keys={["income", "expenses"]}
@@ -293,7 +349,7 @@ function StackedbarChart({ data, ...props }) {
             },
           },
         }}
-        tooltipLabel={({ id }) => id}
+        tooltipLabel={({ id }) => String(id)}
         enableLabel={false}
         role="application"
         ariaLabel="A stacked bar chart"

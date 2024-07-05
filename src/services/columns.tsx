@@ -1,10 +1,4 @@
-import {
-  FilePenIcon,
-  Trash2,
-  ArrowUpDown,
-  ChevronDown,
-  MoreHorizontal,
-} from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Transaction } from "../types/transaction";
 import { Checkbox } from "../components/ui/checkbox";
@@ -36,7 +30,11 @@ export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "type",
     header: "Tipo",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("type") === "income" ? "Receita" : "Despesa"}</div>,
+    cell: ({ row }) => (
+      <div className="capitalize">
+        {row.getValue("type") === "income" ? "Receita" : "Despesa"}
+      </div>
+    ),
   },
   {
     accessorKey: "description",
