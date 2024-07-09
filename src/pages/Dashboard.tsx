@@ -202,7 +202,7 @@ const Dashboard: React.FC = () => {
                   </TableHeader>
                   <TableBody>
                     {transactions
-                      .filter((transaction) => transaction.type === "expense")
+                      .filter((transaction) => transaction.type === "expense" && new Date(transaction.date) > new Date())
                       .map((transaction) => (
                         <TableRow key={transaction.id}>
                           <TableCell>
