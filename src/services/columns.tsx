@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Transaction } from "../types/transaction";
 import { Checkbox } from "../components/ui/checkbox";
 import { Button } from "../components/ui/button";
-
+import * as dateFns from "date-fns";
 export const columns: ColumnDef<Transaction>[] = [
   {
     id: "select",
@@ -67,12 +67,12 @@ export const columns: ColumnDef<Transaction>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = new Date(row.getValue("date"));
+      const date = dateFns.parseISO(row.getValue("date"));
       return (
         <div className="text-right">
           {date.toLocaleDateString("pt-BR", {
             day: "2-digit",
-            month: "2-digit",
+            month: "long",
             year: "numeric",
           })}
         </div>

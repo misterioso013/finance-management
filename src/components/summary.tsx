@@ -13,6 +13,7 @@ type SummaryProps = {
     balance: number;
     transactions: Transaction[];
   };
+  import * as dateFns from "date-fns";
 export const Summary = ({ income, expenses, balance, transactions }: SummaryProps) => {
     return (
         <Card>
@@ -53,6 +54,19 @@ export const Summary = ({ income, expenses, balance, transactions }: SummaryProp
                         .toFixed(2)}
                     </span>
                   </div>
+                  <div className="flex items-center justify-between">
+                    <span>Próximos Recebimentos</span>
+                    <span className="font-semibold">
+                      R${" "}
+                      {transactions
+                        .filter((transaction) => transaction.type === "income" && dateFns.isAfter(dateFns.parseISO(transaction.date), new Date()))
+                        .reduce(
+                          (sum, transaction) => sum + transaction.amount,
+                          0,
+                        )
+                        .toFixed(2)}
+                    </span>
+                    </div>
                 </div>
               </CardContent>
             </Card>

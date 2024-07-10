@@ -9,6 +9,7 @@ import { Balance } from "../components/balance";
 import { Filter } from "../components/filter";
 import { NextExpenses } from "../components/nextExpenses";
 import { Summary } from "../components/summary";
+import { ExpensesToday } from "../components/expensesToday";
 
 const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -112,13 +113,11 @@ const Dashboard: React.FC = () => {
             barChartData={barChartData}
             />
             <Balance balance={balance} pieChartData={pieChartData} />
-            <h3>
-              --- Implementar um Chatbot AI para falar sobre os gastos ---
-            </h3>
+            <Summary income={income} expenses={expenses} balance={balance} transactions={transactions} />
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             <NextExpenses transactions={transactions} />
-            <Summary income={income} expenses={expenses} balance={balance} transactions={transactions} />
+            <ExpensesToday transactions={transactions} />
           </div>
           <TransactionList
             transactions={transactions}

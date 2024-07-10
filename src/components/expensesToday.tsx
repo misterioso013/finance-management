@@ -20,19 +20,18 @@ type NextExpensesProps = {
     transactions: Transaction[];
   };
   
-export const NextExpenses = ({ transactions }: NextExpensesProps) => {
+export const ExpensesToday = ({ transactions }: NextExpensesProps) => {
     
     return(
         <Card>
               <CardHeader>
-                <CardTitle>Próximos Gastos</CardTitle>
-                <CardDescription>Próximos 15 dias</CardDescription>
+                <CardTitle>Gastos de Hoje</CardTitle>
+                <CardDescription>Um breve resumo dos gastos de hoje</CardDescription>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Data</TableHead>
                       <TableHead>Descrição</TableHead>
                       <TableHead>Valor</TableHead>
                     </TableRow>
@@ -42,29 +41,14 @@ export const NextExpenses = ({ transactions }: NextExpensesProps) => {
                       .filter(
                         (transaction) =>
                           transaction.type === "expense" &&
-                            dateFns.isWithinInterval(
-                                new Date(transaction.date),
-                                {
-                                start: new Date(),
-                                end: dateFns.addDays(new Date(), 15),
-                                },
+                            dateFns.isToday(
+                                dateFns.parseISO(transaction.date),
                             ),
-
                       )
                       .map((transaction) => (
                         <TableRow key={transaction.id}>
-                          <TableCell>
-                            {dateFns.parseISO(transaction.date).toLocaleDateString('pt-BR',{
-                                day: "2-digit",
-                                month: "long",
-                                year: "numeric",
-                                })
-                            }
-                          </TableCell>
                           <TableCell>{transaction.description}</TableCell>
-                          <TableCell>
-                            R$ {transaction.amount.toFixed(2).replace(".", ",")}
-                          </TableCell>
+                          <TableCell>R$ {transaction.amount}</TableCell>
                         </TableRow>
                       ))}
                   </TableBody>
