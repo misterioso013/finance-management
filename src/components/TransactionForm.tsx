@@ -30,7 +30,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState(0);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [type, setType] = useState<"income" | "expense">("income");
   const [buttonSubmit, setButtonSubmit] = useState(true);
 
@@ -48,7 +48,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
     onAddTransaction(newTransaction);
     setDescription("");
     setAmount(0);
-    setDate("");
+    setDate(new Date().toISOString().split("T")[0]);
   };
 
   useEffect(() => {
@@ -76,6 +76,7 @@ const TransactionForm: React.FC<TransactionFormProps> = ({
           <div className="mb-2">
             <label className="block">Descrição</label>
             <input
+              autoFocus
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
