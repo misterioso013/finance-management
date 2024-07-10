@@ -57,7 +57,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
 }) => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -149,7 +149,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
                           >
                             {flexRender(
                               header.column.columnDef.header,
-                              header.getContext()
+                              header.getContext(),
                             )}
                             {{
                               asc: <ArrowUpDown className="ml-2 h-4 w-4" />,
@@ -176,7 +176,7 @@ const TransactionList: React.FC<TransactionListProps> = ({
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}

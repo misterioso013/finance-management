@@ -47,7 +47,7 @@ export const Editar: React.FC<EditarProps> = ({
   const [buttonSubmit, setButtonSubmit] = useState(true);
 
   const handleEditTransaction: FormEventHandler<HTMLFormElement> = (
-    e: React.FormEvent<HTMLFormElement>
+    e: React.FormEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
     const editedTransaction: Transaction = {
